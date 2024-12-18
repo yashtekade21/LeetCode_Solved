@@ -2,16 +2,16 @@ class Solution {
 public:
     vector<int> finalPrices(vector<int>& prices) {
         int n = prices.size();
-
-        for(int i=0;i<n-1;i++){
-            for(int j=i+1;j<n;j++){
-                if(prices[j] <= prices[i] && j > i){
-                    prices[i] -= prices[j];
-                    break;
-                }
+        stack<int> s;
+        vector<int> ans(prices.begin(),prices.end());
+        for(int i=0;i<n;i++){
+            while(!s.empty() && prices[i] <= prices[s.top()]){
+                ans[s.top()] -= prices[i];
+                s.pop(); 
             }
+            s.push(i);
         }
-        return prices;
+        return ans;
     }
 };
 static const auto kds = []() {
