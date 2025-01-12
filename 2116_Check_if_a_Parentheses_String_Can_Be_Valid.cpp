@@ -2,31 +2,34 @@ class Solution {
 public:
     bool canBeValid(string s, string locked) {
         int n = s.length();
-        if(n%2 != 0)    
+        if(n%2 != 0)
             return false;
+            
+        int open_cnt = 0;
+        int close_cnt = 0;
 
-        stack<int> open_brac,both_brac;
-        for(int i=0;i<n;i++){
-            if(locked[i] == '0')
-                both_brac.push(i);
-            else if(s[i] == '(')
-                open_brac.push(i);
-            else if(s[i] == ')'){
-                if(!open_brac.empty())
-                    open_brac.pop();
-                else if(!both_brac.empty())
-                    both_brac.pop();
-                else
-                    return false;
-            }
-        }
-        while(!open_brac.empty() && !both_brac.empty() && open_brac.top() < both_brac.top()){
-            open_brac.pop();
-            both_brac.pop();
+        // iteration for open brackets
+        for (int i = 0; i < n; i++) {
+            if (locked[i] == '0' || s[i] == '(')
+                open_cnt++;
+            else
+                open_cnt--;
+
+            if (open_cnt < 0)
+                return false;
         }
 
-        if(!open_brac.empty())
-            return false;
+        // iteration for closed brackets
+        for (int i = n - 1; i >= 0; i--) {
+            if (locked[i] == '0' || s[i] == ')')
+                close_cnt++;
+            else
+                close_cnt--;
+
+            if (close_cnt < 0)
+                return false;
+        }
+
         return true;
     }
 };
