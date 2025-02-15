@@ -6,41 +6,23 @@ public:
         for (int num = 1; num <= n; num++) {
             int sq = num * num;
 
-            string s = to_string(sq);
-            vector<vector<int>> dp(s.length(), vector<int>(num + 1, -1));
-            if (check_punish_num(s, num, 0, 0, dp)) {
+            if (check_punish_num(sq, num, 0))
                 ans += sq;
-            }
         }
         return ans;
     }
-
 private:
-    bool check_punish_num(string& s, int& num, int i, int cur_sum,
-                          vector<vector<int>>& dp) {
-        if (i == s.length()) {
-            return cur_sum == num;
-        }
+    bool check_punish_num(int sq,int n, int cur_sum){
+        if(sq == 0)
+            return cur_sum == n;
 
-        if (cur_sum > num) {
+        if(cur_sum > n)
             return false;
-        }
 
-        if (dp[i][cur_sum] != -1)
-            return dp[i][cur_sum];
-
-        bool possible = false;
-        for (int j = i; j < s.length(); j++) {
-            string sub = s.substr(i, j - i + 1);
-            int val = stoi(sub);
-
-            possible =
-                possible || check_punish_num(s, num, j + 1, cur_sum + val, dp);
-
-            if (possible)
-                return true;
-        }
-        return dp[i][cur_sum] = possible;
+        return check_punish_num(sq/10,n,cur_sum + sq%10) || 
+                check_punish_num(sq/100,n,cur_sum+ sq%100) || 
+                check_punish_num(sq/1000,n,cur_sum + sq%1000) ||
+                check_punish_num(sq/10000,n,cur_sum + sq%10000);
     }
 };
 static const auto kds = []() {
