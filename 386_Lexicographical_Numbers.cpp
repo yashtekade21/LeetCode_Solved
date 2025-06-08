@@ -1,27 +1,34 @@
 class Solution {
 public:
     vector<int> lexicalOrder(int n) {
-        vector<string> vec;
         vector<int> ans;
-        for (int i = 0; i < n; i++)
-            vec.emplace_back(to_string(i + 1));
 
-        sort(vec.begin(),vec.end());
-
-        // for(auto i:vec)
-        //     cout<<i<<" ";
-        for(auto x : vec)
-            ans.emplace_back(stoi(x));
-
-        vec.clear();
+        for (int i = 1; i <= 9; i++)
+            dfs(i, n, ans);
 
         return ans;
     }
-};
 
+private:
+    void dfs(int num, int n, vector<int>& ans) {
+        if (num > n)
+            return;
+
+        ans.emplace_back(num);
+
+        for (int i = 0; i <= 9; i++) {
+            int newNum = num * 10 + i;
+            if (newNum > n)
+                return;
+                
+            dfs(newNum, n, ans);
+        }
+        return;
+    }
+};
 static const auto kds = []() {
-    std::ios::sync_with_stdio(false);
-    std::cin.tie(nullptr);
-    std::cout.tie(nullptr);
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    cout.tie(nullptr);
     return 0;
 }();
