@@ -1,31 +1,33 @@
 class Solution {
 public:
     int findKthNumber(int n, int k) {
-        long long ans = 1, i = 1;
+        int num = 1;
+        k--;
 
-        while (i < k) {
-            long long index = jump(ans, n);
-            if (i + index <= k) {
-                ans += 1;
-                i += index;
+        while (k > 0) {
+            int siblings = cntSiblings(num, num + 1, n);
+            if (siblings <= k) {
+                num++;
+                k -= siblings;
             } else {
-                ans *= 10;
-                i++;
+                num *= 10;
+                k--;
             }
         }
-        return ans;
+
+        return num;
     }
 
 private:
-    long long jump(long long ans, int n) {
-        long long sib = ans + 1,steps = 0;
+    int cntSiblings(long long num, long long sib, int n) {
+        int count = 0;
 
-        while (ans <= n) {
-            steps += min(sib , static_cast<long long>(n + 1)) - ans;
-            ans *= 10;
-            sib *= 10;
+        while (num <= n) {
+            count += (sib - num);
+            num *= 10;
+            sib = min(sib * 10, static_cast<long long>(n + 1));
         }
-        return steps;
+        return count;
     }
 };
 static const auto kds = []() {
