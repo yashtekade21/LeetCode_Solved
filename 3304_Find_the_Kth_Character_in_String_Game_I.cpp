@@ -8,10 +8,11 @@ public:
             for (int i = 0; i < n; i++) {
                 int ch = (word[i] - 'a' + 1) % 26;
                 word += (ch + 'a');
+                if(word.length() == k)
+                    break;
             }
         }
-
-        return word[k - 1];
+        return word.back();
     }
 };
 static const auto kds = []() {
