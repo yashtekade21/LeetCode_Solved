@@ -1,17 +1,20 @@
 class Solution {
 public:
     string makeFancyString(string s) {
-        int n = s.length(), count = 1;
+        int n = s.length();
         string ans = "";
 
-        for (int i = 0; i < n; i++) {
-            if (i > 0 && s[i] == s[i - 1])
-                count++;
-            else
-                count = 1;
+        ans += s[0];
+        int freq = 1;
 
-            if (count <= 2)
+        for (int i = 1; i < n; i++) {
+            if (s[i - 1] == s[i] && freq < 2) {
+                freq++;
                 ans += s[i];
+            } else if (s[i - 1] != s[i]) {
+                freq = 1;
+                ans += s[i];
+            }
         }
         return ans;
     }
