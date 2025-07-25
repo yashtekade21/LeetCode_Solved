@@ -2,17 +2,23 @@ class Solution {
 public:
     int maxSum(vector<int>& nums) {
         int n = nums.size();
-        sort(nums.begin(),nums.end());
-        int subSum = nums[n-1];
 
-        for(int i=n-2;i>=0;i--){
-            if(nums[i] == nums[i+1])
-                continue;
-            if(nums[i] <= 0)
-                break;
-            subSum += nums[i];
+        int i = 0, j = 0;
+        int ans = 0;
+        int maxNeg = INT_MIN;
+
+        unordered_set<int> st;
+
+        for (auto& num : nums) {
+            if (num <= 0)
+                maxNeg = max(maxNeg, num);
+            else if (st.find(num) == st.end()) {
+                ans += num;
+                st.insert(num);
+            }
         }
-        return subSum;
+
+        return ans == 0 ? maxNeg : ans;
     }
 };
 static const auto kds = []() {
