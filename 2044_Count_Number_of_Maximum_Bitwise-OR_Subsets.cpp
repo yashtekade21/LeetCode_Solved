@@ -2,23 +2,25 @@ class Solution {
 public:
     int countMaxOrSubsets(vector<int>& nums) {
         int maxOR = 0;
-        for (int i : nums)
-            maxOR |= i;
-        return count(nums, 0, maxOR, 0);
+
+        for (auto& num : nums)
+            maxOR |= num;
+
+        return solve(nums, 0, 0, maxOR);
     }
 
 private:
-    int count(vector<int>& nums, int OR, int maxOR, int i) {
-        if (i == nums.size()){
+    int solve(vector<int>& nums, int idx, int OR, int& maxOR) {
+        if (idx == nums.size()) {
             if (OR == maxOR)
                 return 1;
-        return 0;
-    }
-    // int include = 0, exclude = 0;
+            return 0;
+        }
 
-    int include = count(nums, OR | nums[i], maxOR, i + 1);
-    int exclude = count(nums, OR, maxOR, i + 1);
-    return include + exclude;
+        int take = solve(nums, idx + 1, OR | nums[idx], maxOR);
+        int not_take = solve(nums, idx + 1, OR, maxOR);
+
+        return take + not_take;
     }
 };
 static const auto kds = []() {
