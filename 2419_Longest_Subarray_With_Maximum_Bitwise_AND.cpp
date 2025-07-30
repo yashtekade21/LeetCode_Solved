@@ -1,28 +1,32 @@
 class Solution {
 public:
     int longestSubarray(vector<int>& nums) {
-        int k = 1;
-        int count = 0;
-        int max_bitwise_and = *max_element(nums.begin(), nums.end());
-        int i = 0;
-        while (i < nums.size()) {
-            if (nums[i] == max_bitwise_and) {
-                while (i < nums.size() && nums[i++] == max_bitwise_and)
-                    count++;
+        int n = nums.size();
 
-                k = max(k, count);
-                count = 0;
+        int maxAND = *max_element(nums.begin(), nums.end());
+
+        int i = 0;
+        int ans = 0, maxLen = 0;
+
+        while (i < n) {
+            if (nums[i] == maxAND) {
+                while (i < n && nums[i] == maxAND) {
+                    maxLen++;
+                    i++;
+                }
+
+                ans = max(ans, maxLen);
+                maxLen = 0;
             } else
                 i++;
         }
 
-        return k;
+        return ans;
     }
 };
-
 static const auto kds = []() {
-    std::ios::sync_with_stdio(false);
-    std::cin.tie(nullptr);
-    std::cout.tie(nullptr);
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    cout.tie(nullptr);
     return 0;
 }();
