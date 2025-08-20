@@ -1,25 +1,37 @@
 class Solution {
 public:
+    int m, n;
+    vector<vector<int>> dp;
     int countSquares(vector<vector<int>>& matrix) {
-        int r = matrix.size();
-        int c = matrix[0].size();
+        m = matrix.size();
+        n = matrix[0].size();
+        dp.resize(301,vector<int>(301,-1));
+        int ans = 0;
 
-        vector<vector<int>> dp(r, vector<int>(c, 0));
-        int total_sm = 0;
-
-        for (int i = 0; i < r; i++) {
-            for (int j = 0; j < c; j++) {
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
                 if (matrix[i][j] == 1) {
-                    if (i == 0 || j == 0) 
-                        dp[i][j] = 1;
-                    else 
-                        dp[i][j] = min({dp[i - 1][j], dp[i][j - 1], dp[i - 1][j - 1]}) + 1;
-                    
-                    total_sm += dp[i][j];
+                    ans += solve(i, j, matrix);
                 }
             }
         }
-        return total_sm;
+
+        return ans;
+    }
+
+private:
+    int solve(int i, int j, vector<vector<int>>& matrix) {
+        if (i > m - 1 || j > n - 1 || matrix[i][j] == 0)
+            return 0;
+
+        if(dp[i][j] != -1)
+            return dp[i][j];
+            
+        int right = solve(i, j + 1, matrix);
+        int down = solve(i + 1, j, matrix);
+        int diag = solve(i + 1, j + 1, matrix);
+
+        return dp[i][j] = 1 + min({right, down, diag});
     }
 };
 static const auto kds = []() {
