@@ -2,36 +2,41 @@ class Solution {
 public:
     double maxAverageRatio(vector<vector<int>>& classes, int extraStudents) {
         int n = classes.size();
-        priority_queue<pair<double, pair<int, int>>> pq;
+        double ans = 0;
 
-        for (auto one_class : classes) {
-            double pass_ratio = diff_inc(one_class[0], one_class[1]);
-            pq.push({pass_ratio, {one_class[0], one_class[1]}});
+        priority_queue<pair<double, int>> pq;
+
+        for (int i = 0; i < n; i++) {
+            double curPR = (double)classes[i][0] / classes[i][1];
+            double newPR = (double)(classes[i][0] + 1) / (classes[i][1] + 1);
+            double diff = newPR - curPR;
+
+            pq.push({diff, i});
         }
 
-        for (int i = 0; i < extraStudents; i++) {
-            auto class_detail = pq.top();
+        while (extraStudents--) {
+            double diff = pq.top().first;
+            int idx = pq.top().second;
             pq.pop();
 
-            int pass_stu = class_detail.second.first;
-            int total_stu = class_detail.second.second;
-            double new_pass_ratio = diff_inc(pass_stu + 1, total_stu + 1);
+            classes[idx][0]++;
+            classes[idx][1]++;
 
-            pq.push({new_pass_ratio, {pass_stu + 1, total_stu + 1}});
+            double curPR = (double)classes[idx][0] / classes[idx][1];
+            double newPR =
+                (double)(classes[idx][0] + 1) / (classes[idx][1] + 1);
+            double newDiff = newPR - curPR;
+
+            pq.push({newDiff, idx});
         }
 
-        double avg_pass_ratio = 0;
-        while (!pq.empty()) {
-            pair<int, int> p = pq.top().second;
-            pq.pop();
-            avg_pass_ratio += (double)p.first / (double)p.second;
-        }
-        return (double)avg_pass_ratio / n;
-    }
+        for (int i = 0; i < n; i++) {
+            double PR = (double)classes[i][0] / classes[i][1];
 
-private:
-    double diff_inc(int pass, int total) {
-        return (double)(pass + 1) / (double)(total + 1) - (double)pass / (double)total;
+            ans += PR;
+        }
+
+        return (double)ans / n;
     }
 };
 static const auto kds = []() {
