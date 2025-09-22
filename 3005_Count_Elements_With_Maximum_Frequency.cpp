@@ -10,9 +10,9 @@ public:
         }
 
         int ans = 0;
-        for (auto& num : nums) {
-            if (mp[num] == maxFreq)
-                ans++;
+        for (int num=1;num<101;num++) {
+            if(mp[num] == maxFreq)
+                ans += mp[num];
         }
         return ans;
     }
