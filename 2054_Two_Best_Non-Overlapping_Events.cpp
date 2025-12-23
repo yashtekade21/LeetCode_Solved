@@ -1,42 +1,33 @@
 class Solution {
 public:
     int n;
-    int memo[100001][3];
+    vector<vector<int>> dp;
 
     int maxTwoEvents(vector<vector<int>>& events) {
-       
+        n = events.size();
+        dp.resize(100001, vector<int>(3, -1));
         sort(events.begin(), events.end());
 
-      
-        n = events.size();
-        memset(memo,-1,sizeof(memo));
-
-    
         return solve(events, 0, 0);
     }
 
- 
+private:
     int solve(vector<vector<int>>& events, int i, int cnt) {
-   
-        if (cnt == 2 || i >= n) return 0;
+        if (cnt == 2 || i >= n)
+            return 0;
 
-      
-        if (memo[i][cnt] != -1) return memo[i][cnt];
+        if (dp[i][cnt] != -1)
+            return dp[i][cnt];
 
-    
         int nextIndex = bs(events, events[i][1]);
 
-      
         int attend = events[i][2] + solve(events, nextIndex, cnt + 1);
 
-      
         int not_attend = solve(events, i + 1, cnt);
 
-  
-        return memo[i][cnt] = max(attend, not_attend);
+        return dp[i][cnt] = max(attend, not_attend);
     }
 
-   
     int bs(vector<vector<int>>& events, int endTime) {
         int l = 0, r = n - 1;
         int ind = n;
@@ -52,3 +43,9 @@ public:
         return ind;
     }
 };
+static const auto kds = []() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    cout.tie(nullptr);
+    return 0;
+}();
