@@ -2,64 +2,46 @@ class Solution {
 public:
     const int MOD = 1e9 + 7;
     vector<vector<int>> dp;
-    vector<string> allRYGCombs;
+    vector<string> opts = {"RYG", "RGY", "RYR", "RGR", "YRG", "YGR",
+                           "YGY", "YRY", "GRY", "GYR", "GRG", "GYG"};
     int numOfWays(int n) {
-        generateRYGCombs("", 3, '@');
-
-        int totalCombs = allRYGCombs.size();
-        dp = vector<vector<int>>(n + 1, vector<int>(totalCombs + 1, -1));
-
         int ans = 0;
-        for (int i = 0; i < totalCombs; i++)
-            ans = (ans + solve(i, n - 1, 3)) % MOD;
+        dp.resize(n,vector<int>(12,-1));
+        for (int i = 0; i < 12; i++)
+            ans = (ans + solve(n - 1, i)) % MOD;
+
         return ans;
     }
 
 private:
-    int solve(int prevIdx, int remRows, int maxLen) {
-        if (remRows == 0)
+    int solve(int n, int prevIdx) {
+        int res = 0;
+        if (n == 0)
             return 1;
+        
+        if(dp[n][prevIdx] != -1)
+            return dp[n][prevIdx];
 
-        if (dp[remRows][prevIdx] != -1)
-            return dp[remRows][prevIdx];
+        string lastPattern = opts[prevIdx];
 
-        int ways = 0;
-        string prevRGBComb = allRYGCombs[prevIdx];
-
-        for (int i = 0; i < allRYGCombs.size(); i++) {
-            if (i == prevIdx)
+        for (int curIdx = 0; curIdx < 12; curIdx++) {
+            if (curIdx == prevIdx)
                 continue;
 
-            string curRGBComb = allRYGCombs[i];
+            string curPattern = opts[curIdx];
+            bool flag = false;
 
-            if (isEqual(curRGBComb, prevRGBComb, maxLen))
-                ways = (ways + solve(i, remRows - 1, maxLen)) % MOD;
+            for (int col = 0; col < 3; col++) {
+                if (lastPattern[col] == curPattern[col]) {
+                    flag = true;
+                    break;
+                }
+            }
+
+            if (!flag)
+                res = (res + solve(n - 1, curIdx)) % MOD;
         }
-
-        return dp[remRows][prevIdx] = ways;
-    }
-
-    bool isEqual(string& str1, string& str2, int m) {
-        for (int i = 0; i < m; i++) {
-            if (str1[i] == str2[i])
-                return false;
-        }
-        return true;
-    }
-
-    void generateRYGCombs(string curState, int len, char prevColor) {
-        if (len == 0) {
-            allRYGCombs.push_back(curState);
-            return;
-        }
-
-        for (auto ch : {'R', 'Y', 'G'}) {
-            if (prevColor == ch)
-                continue;
-
-            generateRYGCombs(curState + ch, len - 1, ch);
-        }
-        return;
+        return dp[n][prevIdx]= res;
     }
 };
 static const auto kds = []() {
