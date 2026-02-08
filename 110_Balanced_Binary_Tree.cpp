@@ -13,21 +13,22 @@
 class Solution {
 public:
     bool isBalanced(TreeNode* root) {
-        if (root == nullptr)
+        if (!root)
             return true;
 
-        return check(root) != -1;
+        return solve(root) != -1;
     }
 
 private:
-    int check(TreeNode* root) {
-        if (root == nullptr)
+    int solve(TreeNode* node) {
+        if (!node)
             return 0;
 
-        int left = check(root->left);
+        int left = solve(node->left);
         if (left == -1)
             return -1;
-        int right = check(root->right);
+
+        int right = solve(node->right);
         if (right == -1)
             return -1;
 
