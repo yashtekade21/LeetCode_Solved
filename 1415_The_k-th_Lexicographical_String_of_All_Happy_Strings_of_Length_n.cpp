@@ -1,22 +1,22 @@
 class Solution {
 public:
     string getHappyString(int n, int k) {
-        vector<string> vec;
-        string s = "";
+        string s, ans;
+        int idx = 0;
+        solve(s, ans, n, k, idx);
 
-        solve(vec, s, n, k);
-
-        return k > vec.size() ? "" : vec[k - 1];
+        return ans;
     }
 
 private:
-    void solve(vector<string>& vec, string& s, int n, int k) {
+    void solve(string& s, string& ans, int n, int k, int& idx) {
         if (s.length() == n) {
-            vec.emplace_back(s);
+            idx++;
+            if (idx == k)
+                ans = s;
+
             return;
         }
-        if (vec.size() == k)
-            return;
 
         for (char ch = 'a'; ch <= 'c'; ch++) {
             if (!s.empty() && s.back() == ch)
@@ -24,10 +24,11 @@ private:
 
             s += ch;
 
-            solve(vec, s, n, k);
+            solve(s, ans, n, k, idx);
 
             s.pop_back();
         }
+        return;
     }
 };
 static const auto kds = []() {
