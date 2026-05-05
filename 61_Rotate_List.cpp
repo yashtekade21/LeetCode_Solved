@@ -8,35 +8,40 @@
  *     ListNode(int x, ListNode *next) : val(x), next(next) {}
  * };
  */
-
 class Solution {
 public:
     ListNode* rotateRight(ListNode* head, int k) {
-        if (!head || k == 0)
+        if (head == nullptr || head->next == nullptr || k == 0)
             return head;
 
-        ListNode* node = head;
-        int size = 1;
-        while (node->next) {
-            size++;
-            node = node->next;
+        int n = 1;
+        ListNode* last = head;
+        while (last->next != nullptr) {
+            n++;
+            last = last->next;
         }
 
-        node->next = head;
-        k = k % size;
-        int newTailPosition = size - k - 1;
+        ListNode* temp = head;
 
-        node = head;
-        for (int i = 0; i < newTailPosition; i++) 
-            node = node->next;
-        
-        ListNode* newHead = node->next;
-        node->next = nullptr;
+        k %= n;
+        if (k == 0)
+            return head;
 
-        return newHead;
+        last->next = head;
+        int pos = n - k - 1;
+        ListNode* tempHead = head;
+
+        while (temp && pos > 0) {
+            temp = temp->next;
+            pos--;
+        }
+
+        head = temp->next;
+        temp->next = nullptr;
+
+        return head;
     }
 };
-
 static const auto kds = []() {
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
