@@ -1,24 +1,34 @@
 class Solution {
 public:
     int findMin(vector<int>& nums) {
-        int low = 0, high = nums.size() - 1;
-        int ans = INT_MAX;
-        while (low <= high) {
-            int mid = (low + high) / 2;
-            if (nums[low] <= nums[high]) {
-                ans = min(ans, nums[low]);
-                break;
-            }
+        int n = nums.size();
+        if (n == 1)
+            return nums[0];
 
-            if (nums[low] <= nums[mid]) {
-                ans = min(ans, nums[low]);
-                low = mid + 1;
+        int idx;
+        for (idx = 0; idx < n - 1; idx++) {
+            if (nums[idx] > nums[idx + 1])
+                break;
+        }
+
+        return min(binSearch(nums, 0, idx), binSearch(nums, idx + 1, n - 1));
+    }
+
+private:
+    int binSearch(vector<int>& arr, int l, int r) {
+        int target = arr[0];
+
+        while (l <= r) {
+            int m = (l + r) / 2;
+
+            if (arr[m] < target) {
+                target = arr[m];
+                r = m - 1;
             } else {
-                ans = min(ans, nums[mid]);
-                high = mid - 1;
+                l = m + 1;
             }
         }
-        return ans;
+        return target;
     }
 };
 static const auto kds = []() {
