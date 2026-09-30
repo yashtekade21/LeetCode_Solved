@@ -1,0 +1,26 @@
+class Solution {
+public:
+    vector<int> maxDepthAfterSplit(string seq) {
+        vector<int> ans(seq.size());
+        int d = 0;
+
+        for (int i = 0; i < seq.size(); i++) {
+            if (seq[i] == '(') {
+                d++;
+                ans[i] = d % 2 == 0 ? 0 : 1;
+            } 
+            else {
+                ans[i] = d % 2 == 0 ? 0 : 1;
+                d--;
+            }
+        }
+
+        return ans;
+    }
+};
+static const auto kds = []() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    cout.tie(nullptr);
+    return 0;
+}();
